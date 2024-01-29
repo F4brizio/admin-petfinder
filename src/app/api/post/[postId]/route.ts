@@ -48,7 +48,6 @@ export const PUT = async (request: Request,{params}:Params) => {
  export const DELETE = async (request: Request,{params}:Params) => {
     try {
        customInitApp();
-      const post = await request.json();
       const firestoreDb = firestore();
       const collection = firestoreDb.collection("Reports");
       const documentRef = collection.doc(params.postId);

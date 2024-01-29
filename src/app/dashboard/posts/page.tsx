@@ -99,9 +99,9 @@ const PostPage = () => {
             setLoading(true);
             setUsers([]);
             const getUsers = async () => {
-              const res = await fetch("/api/user");
+              const res = await fetch("/api/post");
               const data = await res.json();
-              setUsers(data.users);
+              setUsers(data);
               setLoading(false);
             };
             getUsers();
