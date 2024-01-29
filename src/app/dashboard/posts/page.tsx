@@ -33,6 +33,10 @@ export interface Pet {
   direction?: string;
   status?: number;
 }
+export interface DatePet {
+  _seconds: number;
+  _nanoseconds: number;
+}
 
 export interface DatePet {
   _seconds: number;
@@ -47,10 +51,13 @@ const PostPage = () => {
   const [actionModalSelected, setActionModalSelected] =
     useState<ACTION_MODAL | null>(null);
   const usersFiltered = users.filter(
-    (user) =>
-      user?.descriptionPet?.includes(inputSearch) ||
-      user?.namePet?.includes(inputSearch) ||
-      user?.direction?.includes(inputSearch)
+      (user) =>
+          user?.datePet != undefined
+  ).filter(
+      (user) =>
+          user?.descriptionPet?.includes(inputSearch) ||
+          user?.namePet?.includes(inputSearch) ||
+          user?.direction?.includes(inputSearch)
   );
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -149,6 +156,7 @@ const PostPage = () => {
                   type="button"
                   onClick={() => actionWithModal(ACTION_MODAL.CREATE)}
                   className="
+                  hidden
                     py-2 px-4
                     flex
                     gap-2
@@ -166,19 +174,20 @@ const PostPage = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                _id
+                ID UNICO
               </th>
               <th scope="col" className="px-6 py-3">
-                typePet
+                Nombre
               </th>
-              <th scope="col" className="px-6 py-3 text-center">
-                chipPetString
+              <th scope="col" className="px-6 py-3">
+                Fecha
               </th>
-              <th scope="col" className="px-6 py-3 text-center">
-                collarPet
+              <th scope="col" className="px-6 py-3">
+                TIPO DE MASCOTA
               </th>
+
               <th scope="col" className="px-6 py-3 text-center">
-                direction
+                DIRECCION
               </th>
               <th scope="col" className="px-6 py-3">
                 <span className="sr-only">Options</span>
@@ -216,7 +225,8 @@ const PostPage = () => {
           )}
 
           <tbody>
-            {usersFiltered.map((user) => (
+            {usersFiltered.sort((a, b) => b.datePet?._seconds - a.datePet?._seconds).map((user) => (
+
               <tr key={user._id} className="bg-white dark:bg-gray-800">
                 <th
                   scope="row"
@@ -224,15 +234,22 @@ const PostPage = () => {
                 >
                   {user._id}
                 </th>
-                <td className="px-6 py-4">{user?.typePet ?? "----------"}</td>
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  {(user.namePet != "") ? user.namePet : "No definido"}
+                </th>
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  { (user.datePet) ? new Date(user.datePet._seconds * 1000).toLocaleString("es-US", { timeZone: "America/Lima" }) : "No definido" }
+                </th>
+                <td className="px-6 py-4">{user?.typePet ?? "---"}</td>
+
                 <td className="px-6 py-4 text-center">
-                  {user?.chipPetString ?? "----------"}
-                </td>
-                <td className="px-6 py-4 text-center">
-                  {user?.collarPet ?? "----------"}
-                </td>
-                <td className="px-6 py-4 text-center">
-                  {user?.direction ?? "----------"}
+                  {user?.direction ?? "---"}
                 </td>
                 <td className="px-6 py-4 ">
                   <div className="flex gap-4 flex-wrap min-w-80 justify-center">
@@ -248,7 +265,7 @@ const PostPage = () => {
                     font-medium text-blue-100 hover:underline"
                     >
                       <FaRegEdit />
-                      Edit
+                      Editar
                     </button>
                     <button
                       onClick={() => actionWithModal(ACTION_MODAL.DELETE, user)}
@@ -260,7 +277,7 @@ const PostPage = () => {
                      font-medium bg-red-600 text-red-100 hover:underline"
                     >
                       <MdDelete />
-                      Delete
+                      Eliminar
                     </button>
                   </div>
                 </td>
@@ -294,7 +311,6 @@ const Modal = ({
     lng: 0,
     lat: 0,
     descriptionPet: "",
-    chipPetString: "",
     phone: "",
     namePet: "",
     direction: "",
@@ -308,7 +324,6 @@ const Modal = ({
       lng: dataModal?.lng ?? 0,
       lat: dataModal?.lat ?? 0,
       descriptionPet: dataModal?.descriptionPet ?? "",
-      chipPetString: dataModal?.chipPetString ?? "",
       phone: dataModal?.phone ?? "",
       namePet: dataModal?.namePet ?? "",
       direction: dataModal?.direction ?? "",
@@ -319,7 +334,6 @@ const Modal = ({
       typePet: dataModal?.typePet ?? "",
       lng: dataModal?.lng ?? 0,
       descriptionPet: dataModal?.descriptionPet ?? "",
-      chipPetString: dataModal?.chipPetString ?? "",
       phone: dataModal?.phone ?? "",
       namePet: dataModal?.namePet ?? "",
       direction: dataModal?.direction ?? "",
@@ -330,7 +344,6 @@ const Modal = ({
     dataModal?.typePet,
     dataModal?.lng,
     dataModal?.descriptionPet,
-    dataModal?.chipPetString,
     dataModal?.phone,
     dataModal?.namePet,
     dataModal?.direction,
@@ -411,27 +424,32 @@ const Modal = ({
       <>
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-900 ">
-            Type Pet
+            Tipo de Mascota
           </label>
-          <input
-            autoFocus
-            
-            disabled={loading}
-            value={credentials.typePet}
-            onChange={onChange}
-            type="text"
-            name="typePet"
-            required
-            id="typePet"
-            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5
-            disabled:opacity-50 disabled:cursor-not-allowed
-            "
-            placeholder="Type Pet"
-          />
+          <select
+              autoFocus
+              disabled={loading}
+              value={credentials.typePet}
+              name="typePet"
+              id="typePet"
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
+              required
+          >
+            <option value="perro">Perro</option>
+            <option value="gato">Gato</option>
+            <option value="ave">Ave</option>
+            <option value="conejo">Conejo</option>
+            <option value="roedor">Roedor</option>
+            <option value="reptil">Reptil</option>
+            <option value="cerdo">Cerdo</option>
+            <option value="erizo">Erizo</option>
+            <option value="anfibio">Anfibio</option>
+            <option value="otro">Otro</option>
+          </select>
         </div>
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-900 ">
-            Description Pet
+            Descripcion
           </label>
           <input
             
@@ -450,26 +468,7 @@ const Modal = ({
         </div>
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-900 ">
-            Chip Pet String
-          </label>
-          <input
-            
-            disabled={loading}
-            value={credentials.chipPetString}
-            onChange={onChange}
-            type="text"
-            name="chipPetString"
-            required
-            id="chipPetString"
-            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5
-            disabled:opacity-50 disabled:cursor-not-allowed
-            "
-            placeholder="Chip Pet String"
-          />
-        </div>
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-900 ">
-            Phone
+            Telefono
           </label>
           <input
             
@@ -488,7 +487,7 @@ const Modal = ({
         </div>
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-900 ">
-            Name Pet
+            Nombre
           </label>
           <input
             
@@ -507,7 +506,7 @@ const Modal = ({
         </div>
         <div>
           <label className="block mb-2 text-sm font-medium text-gray-900 ">
-            Direction
+            Direccion
           </label>
           <input
             
@@ -630,25 +629,6 @@ const Modal = ({
             disabled:opacity-50 disabled:cursor-not-allowed
             "
             placeholder="Description Pet"
-          />
-        </div>
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-900 ">
-            Chip Pet String
-          </label>
-          <input
-            
-            disabled={loading}
-            value={credentials.chipPetString}
-            onChange={onChange}
-            type="text"
-            name="chipPetString"
-            required
-            id="chipPetString"
-            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5
-            disabled:opacity-50 disabled:cursor-not-allowed
-            "
-            placeholder="Chip Pet String"
           />
         </div>
         <div>
@@ -814,9 +794,9 @@ const Modal = ({
       <div className="rounded-md mt-8 bg-white p-6 space-y-4 md:space-y-6 sm:p-8 max-w-4xl  mx-auto">
         <div className="flex items-center justify-center flex-col">
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
-            {actionModalSelected == ACTION_MODAL.EDIT && "Editar Usuario"}
-            {actionModalSelected == ACTION_MODAL.DELETE && "Eliminar Usuario"}
-            {actionModalSelected == ACTION_MODAL.CREATE && "Crear Usuario"}
+            {actionModalSelected == ACTION_MODAL.EDIT && "Editar Reporte"}
+            {actionModalSelected == ACTION_MODAL.DELETE && "Eliminar Reporte"}
+            {actionModalSelected == ACTION_MODAL.CREATE && "Crear Reporte"}
           </h1>
           <span>{user?._id}</span>
         </div>

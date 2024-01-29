@@ -106,7 +106,7 @@ const Dashboard = () => {
             onChange={(e) => setInputSearch(e.currentTarget.value)}
             type="text"
             className="block py-2  ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Search for items"
+            placeholder="Buscar por correo o id"
           />
         </div>
       </div>
@@ -117,10 +117,6 @@ const Dashboard = () => {
             <div className="flex justify-between">
               <div>
                 Nuestros Usuarios
-                <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-                  Lista de usuarios registrados en nuestro sistema. Aqui
-                  podremos buscar, editar y eliminar usuarios.
-                </p>
               </div>
               <div>
                 <button
@@ -144,16 +140,16 @@ const Dashboard = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                id
+                ID UNICO
               </th>
               <th scope="col" className="px-6 py-3">
-                Email
+                correo electronico
               </th>
               <th scope="col" className="px-6 py-3 text-center">
-                EmailVerified
+                ¿Verificado?
               </th>
               <th scope="col" className="px-6 py-3 text-center">
-                displayName
+                Nombre de Usuario
               </th>
               <th scope="col" className="px-6 py-3">
                 <span className="sr-only">Options</span>
@@ -220,7 +216,7 @@ const Dashboard = () => {
                     font-medium text-blue-100 hover:underline"
                     >
                       <FaRegEdit />
-                      Edit
+                      Editar
                     </button>
                     <button
                       onClick={() => actionWithModal(ACTION_MODAL.DELETE, user)}
@@ -232,7 +228,7 @@ const Dashboard = () => {
                      font-medium bg-red-600 text-red-100 hover:underline"
                     >
                       <MdDelete />
-                      Delete
+                      Eliminar
                     </button>
                   </div>
                 </td>
