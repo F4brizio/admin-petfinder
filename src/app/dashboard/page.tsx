@@ -378,7 +378,7 @@ const Modal = ({
             Correo
           </label>
           <input
-            disabled={loading}
+            disabled={true}
             value={credentials.email}
             onChange={onChange}
             type="text"
@@ -392,18 +392,18 @@ const Modal = ({
           />
         </div>
         <div>
-          <label className="block mb-2 text-sm font-medium text-gray-900 ">
+          <label className="hidden block mb-2 text-sm font-medium text-gray-900 ">
             Contraseña
           </label>
           <input
-            disabled={loading}
+            disabled={false}
             value={credentials.password}
             onChange={onChange}
             type="password"
             name="password"
             id="password"
             placeholder="••••••••"
-            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5
+            className="hidden bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5
             disabled:opacity-50 disabled:cursor-not-allowed
             "
           />
