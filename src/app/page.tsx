@@ -4,8 +4,8 @@ import { FormEvent, useEffect, useState } from "react";
 
 export default function Home() {
   const [credentials, setCredentials] = useState({
-    email: "",
-    password: "",
+    email: "ADMIN",
+    password: "ADMIN",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);

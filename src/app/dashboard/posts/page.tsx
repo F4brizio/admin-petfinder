@@ -225,7 +225,7 @@ const PostPage = () => {
           )}
 
           <tbody>
-          {usersFiltered.sort((a, b) => b?.datePet?._seconds - a?.datePet?._seconds).map((user) => (  
+          {usersFiltered.sort((a, b) => b?.datePet?._seconds - a?.datePet?._seconds).map((user) => (
 
               <tr key={user._id} className="bg-white dark:bg-gray-800">
                 <th
