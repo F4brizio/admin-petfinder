@@ -225,7 +225,7 @@ const PostPage = () => {
           )}
 
           <tbody>
-            {usersFiltered.sort((a, b) => (b?.datePet?._seconds || 1) - (a?.datePet?._seconds || 1)).map((user) => (
+            {usersFiltered.sort((a, b) => b?.datePet?._seconds - a?.datePet?._seconds).map((user) => (
 
               <tr key={user._id} className="bg-white dark:bg-gray-800">
                 <th
@@ -430,6 +430,13 @@ const Modal = ({
               autoFocus
               disabled={loading}
               value={credentials.typePet}
+              onChange={ (e) => {
+                setError("");
+                setCredentials({
+                  ...credentials,
+                  [e.currentTarget.name]: e.currentTarget.value,
+                });
+              }}
               name="typePet"
               id="typePet"
               className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
